@@ -13,6 +13,7 @@ import vcr
 import numpy as np
 import numpy.polynomial.polynomial as poly
 import os
+from functools import partial
 
 sns.set(style='white')
 
@@ -85,7 +86,8 @@ class Model(object):
 def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
             sigma_clip=True, marker='o', plot_model=True):
 
-    df.plot(y='weight', ls='None', marker=marker, ax=axis, zorder=2,
+    errs = df.get('weight_errors', np.zeros_like(df['weight']))
+    df.plot(y='weight', yerr=errs, ls='None', marker=marker, ax=axis, zorder=2,
             legend=False, color=colour)
 
     model = Model.from_dataframe(df)
@@ -126,8 +128,11 @@ def main(args):
                            target=args.target, colour=colours[0],
                            fit_colour=colours[3], plot_model=False)
 
-    weekly = df.resample('1w', how='mean',
-                         loffset=-datetime.timedelta(days=3.5))
+    resample = partial(df.resample, '1w',
+            loffset=datetime.timedelta(days=-3.5))
+    weekly = resample(how='mean')
+    weekly_error = resample(how=lambda vals: vals.std() / np.sqrt(vals.size))
+    weekly['weight_errors'] = weekly_error['weight']
 
     success_time = analyse(weekly, axis, newax, degree=degree, marker='s',
                            target=args.target, colour=colours[1],

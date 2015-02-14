@@ -1,0 +1,5 @@
+use conda 2
+export TRELLO_APP_KEY=
+export TRELLO_API_KEY=
+export BOARD_ID=
+export LIST_ID=

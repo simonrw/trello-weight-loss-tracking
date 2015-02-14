@@ -1,0 +1,5 @@
+venv
+cassettes/*.yaml
+.envrc
+*.swp
+.envrc.bak

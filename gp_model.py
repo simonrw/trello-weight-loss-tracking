@@ -74,14 +74,11 @@ def main(args):
 
     samples = sampler.flatchain
 
-    linear_samples = np.hstack([np.exp(samples[:, :2]), samples[:, 2:]])
 
-    assert linear_samples.shape == samples.shape, (linear_samples.shape,
-            samples.shape)
-    assert np.all(linear_samples[0, 2:] == samples[0, 2:])
-
-    fig = triangle.corner(linear_samples, labels=[r'$\alpha$', r'$\tau$', r'$m$', r'$c$'])
+    labels = [r'$\ln \alpha$', r'$\ln \tau$', r'$m$', r'$c$']
+    fig = triangle.corner(samples, labels=labels)
     fig.savefig('gp_triangle.pdf')
+    plt.close(fig)
 
 
     fig, axis = plt.subplots()

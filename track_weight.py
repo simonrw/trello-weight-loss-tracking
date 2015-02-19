@@ -146,6 +146,7 @@ def main(args):
 
     sns.despine()
     fig.tight_layout()
+    fig.savefig('weight_stats.pdf')
     plt.show()
 
 

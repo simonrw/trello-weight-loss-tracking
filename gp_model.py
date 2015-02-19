@@ -106,6 +106,16 @@ def main(args):
     axis.set_ylabel(r'Weight / kg')
     fig.tight_layout()
     fig.savefig('gp_model.pdf')
+    plt.close(fig)
+
+    fig, axes = plt.subplots(ndim, 1, sharex=True)
+    for (ax, chain, label) in zip(axes, samples.T, labels):
+        ax.plot(chain, 'k-', lw=0.2)
+        ax.set_ylabel(label)
+    fig.tight_layout()
+    axes[-1].set_xlabel(r'Step')
+    fig.savefig('gp_chains.pdf')
+    plt.close(fig)
 
 
 

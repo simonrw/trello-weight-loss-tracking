@@ -4,3 +4,4 @@ cassettes/*.yaml
 *.swp
 .envrc.bak
 *.pdf
+*.csv

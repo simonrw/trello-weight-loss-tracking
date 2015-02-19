@@ -133,6 +133,7 @@ def main(args):
     weekly = resample(how='mean')
     weekly_error = resample(how=lambda vals: vals.std() / np.sqrt(vals.size))
     weekly['weight_errors'] = weekly_error['weight']
+    weekly.to_csv('weekly_binned.csv')
 
     success_time = analyse(weekly, axis, newax, degree=degree, marker='s',
                            target=args.target, colour=colours[1],

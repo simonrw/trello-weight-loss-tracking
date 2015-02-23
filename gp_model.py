@@ -51,6 +51,8 @@ def get_data():
 def main(args):
     logger.debug(args)
     x, y, e = get_data()
+    ind = np.isfinite(x) & np.isfinite(y) & np.isfinite(e)
+    x, y, e = [data[ind] for data in [x, y, e]]
 
     fit = np.poly1d(np.polyfit(x, y, w=1. / e ** 2, deg=1))
     popt = fit.c

@@ -90,19 +90,19 @@ def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
     df.plot(y='weight', yerr=errs, ls='None', marker=marker, ax=axis, zorder=2,
             legend=False, color=colour)
 
-    model = Model.from_dataframe(df)
-    model.fit(degree=degree)
-    if plot_model:
-        model.plot(twin_ax)
-    success_time = model.predict(target)
-    if sigma_clip:
-        try:
-            sigma_clipped_out = df[~model.fitted_ind]
-            sigma_clipped_out.plot(y='weight', ls='None', marker='o', ax=axis,
-                                   color=fit_colour, zorder=3, legend=False)
-        except TypeError:
-            pass
-    return success_time
+    # model = Model.from_dataframe(df)
+    # model.fit(degree=degree)
+    # if plot_model:
+    #     model.plot(twin_ax)
+    # success_time = model.predict(target)
+    # if sigma_clip:
+    #     try:
+    #         sigma_clipped_out = df[~model.fitted_ind]
+    #         sigma_clipped_out.plot(y='weight', ls='None', marker='o', ax=axis,
+    #                                color=fit_colour, zorder=3, legend=False)
+    #     except TypeError:
+    #         pass
+    # return success_time
 
 
 def main(args):
@@ -133,14 +133,16 @@ def main(args):
     weekly = resample(how='mean')
     weekly_error = resample(how=lambda vals: vals.std() / np.sqrt(vals.size))
     weekly['weight_errors'] = weekly_error['weight']
+    # Include measurement error
+    weekly['weight_errors'] = np.sqrt(weekly['weight_errors'] ** 2 + 0.01)
     weekly.to_csv('weekly_binned.csv')
 
-    success_time = analyse(weekly, axis, newax, degree=degree, marker='s',
-                           target=args.target, colour=colours[1],
-                           fit_colour=colours[4],
-                           sigma_clip=False, plot_model=True)
-    axis.set_title('Achieve target ({:.1f} kg) on {}'.format(
-        args.target, success_time))
+    # success_time = analyse(weekly, axis, newax, degree=degree, marker='s',
+    #                        target=args.target, colour=colours[1],
+    #                        fit_colour=colours[4],
+    #                        sigma_clip=False, plot_model=True)
+    # axis.set_title('Achieve target ({:.1f} kg) on {}'.format(
+    #     args.target, success_time))
 
     newax.set_xticklabels([])
 

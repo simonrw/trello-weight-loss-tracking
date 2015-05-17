@@ -136,6 +136,8 @@ def main(args):
     # Include measurement error
     weekly['weight_errors'] = np.sqrt(weekly['weight_errors'] ** 2 + 0.01)
     weekly.to_csv('weekly_binned.csv')
+    axis.errorbar(weekly.index, weekly.weight, weekly.weight_errors,
+            ls='None', marker='s')
 
     # success_time = analyse(weekly, axis, newax, degree=degree, marker='s',
     #                        target=args.target, colour=colours[1],

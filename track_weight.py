@@ -86,7 +86,7 @@ class Model(object):
 def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
             sigma_clip=True, marker='o', plot_model=True):
 
-    errs = df.get('weight_errors', np.zeros_like(df['weight']))
+    errs = df.get('errors', np.zeros_like(df['weight']))
     df.plot(y='weight', yerr=errs, ls='None', marker=marker, ax=axis, zorder=2,
             legend=False, color=colour, alpha=0.2)
 
@@ -113,12 +113,21 @@ def main(args):
         client = TrelloApi(apikey=TRELLO_API_KEY, token=TRELLO_APP_KEY)
         cards = client.lists.get_card(LIST_ID)
 
-    weight, dt = [], []
+    weight, dt, errors = [], [], []
     for card in cards:
-        weight.append(float(card['name']))
+        try:
+            weight.append(float(card['name']))
+        except ValueError:
+            measurements = [float(value) for value in card['name'].split()]
+            mean_value = np.average(measurements)
+            error_value = np.std(measurements) / np.sqrt(len(measurements))
+            weight.append(mean_value)
+            errors.append(error_value)
+        else:
+            errors.append(0.)
+
         dt.append(create_date(card['id']))
 
-    errors = np.ones_like(weight) * 0.05
     df = pd.DataFrame({'weight': weight, 'errors': errors}, index=dt)
 
     fig, axis = plt.subplots()

@@ -128,7 +128,7 @@ def main(args):
                            target=args.target, colour=colours[0],
                            fit_colour=colours[3], plot_model=False)
 
-    resample = partial(df.resample, '1w',
+    resample = partial(df.resample, '1m',
             loffset=datetime.timedelta(days=-3.5))
     weekly = resample(how='mean')
     weekly_error = resample(how=lambda vals: vals.std() / np.sqrt(vals.size))

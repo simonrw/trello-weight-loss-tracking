@@ -88,7 +88,7 @@ def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
 
     errs = df.get('weight_errors', np.zeros_like(df['weight']))
     df.plot(y='weight', yerr=errs, ls='None', marker=marker, ax=axis, zorder=2,
-            legend=False, color=colour)
+            legend=False, color=colour, alpha=0.2)
 
     # model = Model.from_dataframe(df)
     # model.fit(degree=degree)

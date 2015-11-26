@@ -86,7 +86,7 @@ class Model(object):
 def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
             sigma_clip=True, marker='o', plot_model=True):
 
-    errs = df.get('errors', np.zeros_like(df['weight']))
+    errs = df['errors']
     df.plot(y='weight', yerr=errs, ls='None', marker=marker, ax=axis, zorder=2,
             legend=False, color=colour, alpha=0.2)
 
@@ -129,6 +129,10 @@ def main(args):
         dt.append(create_date(card['id']))
 
     df = pd.DataFrame({'weight': weight, 'errors': errors}, index=dt)
+
+    # Add a base level of measurement error
+    measurement_error = 0.05
+    df['errors'] = np.sqrt(df['errors'] ** 2 + measurement_error ** 2)
 
     fig, axis = plt.subplots()
     newax = axis.twiny()

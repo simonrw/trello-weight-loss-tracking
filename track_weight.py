@@ -7,6 +7,7 @@ import logging
 from trello import TrelloApi
 import datetime
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import pandas as pd
 import seaborn as sns
 import vcr
@@ -14,6 +15,17 @@ import numpy as np
 import numpy.polynomial.polynomial as poly
 import os
 from functools import partial
+
+EVENTS = [
+    {'start': datetime.datetime(2016, 2, 17),
+     'end': datetime.datetime(2016, 2, 19),
+     'label': 'Geneva meeting',
+    },
+    {'start': datetime.datetime(2016, 2, 19),
+     'end': datetime.datetime(2016, 3, 4),
+     'label': 'Chile trip',
+    },
+]
 
 sns.set(style='white')
 
@@ -104,6 +116,35 @@ def analyse(df, axis, twin_ax, degree, target, colour, fit_colour,
     #         pass
     # return success_time
 
+class DateRectangle(plt.Rectangle):
+    @classmethod
+    def from_dates(cls, start_date, end_date, low, height, *args, **kwargs):
+        start = mdates.date2num(start_date)
+        end = mdates.date2num(end_date)
+        width = end - start
+        return cls((start, low), width, height, *args, **kwargs)
+
+def add_events(axis):
+    print(axis)
+    low = 94
+    height = 0.5
+    for event in EVENTS:
+        rect = DateRectangle.from_dates(
+            start_date=event['start'],
+            end_date=event['end'],
+            low=low, height=height,
+            facecolor='yellow', edgecolor='black', linewidth=1)
+
+        axis.add_patch(rect)
+
+        rx, ry = rect.get_xy()
+        cx = rx + rect.get_width() / 2.
+        cy = ry + rect.get_height() / 2.
+
+        axis.annotate(event['label'], (cx, cy), color='k',
+                      fontsize=8, ha='center', va='center')
+
+
 
 def main(args):
     degree = 1
@@ -160,6 +201,8 @@ def main(args):
     #     args.target, success_time))
 
     newax.set_xticklabels([])
+
+    add_events(axis)
 
     sns.despine()
     fig.tight_layout()

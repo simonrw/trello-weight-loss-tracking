@@ -25,6 +25,10 @@ EVENTS = [
      'end': datetime.datetime(2016, 3, 4),
      'label': 'Chile trip',
     },
+    {'start': datetime.datetime(2016, 8, 13),
+     'end': datetime.datetime(2016, 8, 20),
+     'label': 'Wedding',
+    }
 ]
 
 sns.set(style='white')

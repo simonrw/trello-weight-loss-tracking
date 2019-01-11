@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+main() {
+    virtualenv -p $(which python2) ./venv
+    ./venv/bin/pip install -r requirements.txt
+    if [[ ! -f .envrc ]]; then
+        echo "No .envrc file found. Copy .envrc.sample to .envrc and fill out the details"
+        exit 1
+    fi
+}
+
+main

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+main() {
+    source ./.envrc
+
+    ./venv/bin/python ./track_weight.py -r
+}
+
+main

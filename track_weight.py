@@ -152,6 +152,10 @@ def add_events(axis):
 
 def main(args):
     degree = 1
+    cassette_name = 'cassettes/query.yaml'
+    if args.reset and os.path.isfile(cassette_name):
+        os.remove(cassette_name)
+
     with vcr.use_cassette('cassettes/query.yaml',
                           filter_headers=['authorization'],
                           filter_query_parameters=['token', 'key']):
@@ -218,4 +222,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--target', help='Target weight', required=False,
                         type=float, default=63.5)
+    parser.add_argument('-r', '--reset', action='store_true',
+            default=False, required=False, help='Reset cassettes')
     main(parser.parse_args())
